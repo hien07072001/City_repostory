@@ -2,11 +2,11 @@ package com.codegym.cms.service.Province;
 
 import com.codegym.cms.model.Province;
 import com.codegym.cms.repository.ProvinceRepository;
-import com.codegym.cms.service.Province.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ProvinceServiceImpl implements ProvinceService {
+import java.util.Optional;
 
+public class ProvinceServiceImpl implements ProvinceService{
     @Autowired
     private ProvinceRepository provinceRepository;
 
@@ -16,8 +16,8 @@ public class ProvinceServiceImpl implements ProvinceService {
     }
 
     @Override
-    public Province findById(Long id) {
-        return provinceRepository.findOne(id);
+    public Optional<Province> findById(Long id) {
+        return provinceRepository.findById(id);
     }
 
     @Override
@@ -26,7 +26,8 @@ public class ProvinceServiceImpl implements ProvinceService {
     }
 
     @Override
-    public void remove(Long id) {
-        provinceRepository.delete(id);
+    public void delete(Long id) {
+        provinceRepository.deleteById(id);
+
     }
 }

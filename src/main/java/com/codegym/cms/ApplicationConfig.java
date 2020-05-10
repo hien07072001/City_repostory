@@ -1,5 +1,7 @@
 package com.codegym.cms;
 
+import com.codegym.cms.concern.Logger;
+import com.codegym.cms.formatter.ProvinceFormatter;
 import com.codegym.cms.service.Customer.CustomerService;
 import com.codegym.cms.service.Customer.CustomerServiceImpl;
 import com.codegym.cms.service.Province.ProvinceService;
@@ -10,6 +12,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -34,31 +37,31 @@ import java.util.Properties;
 @EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan("com.codegym.cms.controller")
-//Thực hiện các thao tác cấu hình trong ApplicationConfig:
-//
-//Loại bỏ Bean customerRepository
-//Thêm annotation @EnableJpaRepositories("com.codegym.cms.repository")
 @EnableJpaRepositories("com.codegym.cms.repository")
+@EnableAspectJAutoProxy
 
 public class ApplicationConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     private ApplicationContext applicationContext;
     @Override
+//    tạo kho chưa bean
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext=applicationContext;
-
+        this.applicationContext = applicationContext;
     }
-    //Thymeleaf Configuration
+
     @Bean
+//    tìm đến cái view
     public SpringResourceTemplateResolver templateResolver(){
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding("UTF-8");
         return templateResolver;
     }
 
     @Bean
+//   công cụ tìm views (set đến cái temlateresolver)
     public TemplateEngine templateEngine(){
         TemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
@@ -66,17 +69,19 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter implements Applic
     }
 
     @Bean
+//
     public ThymeleafViewResolver viewResolver(){
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(templateEngine());
+        viewResolver.setCharacterEncoding("UTF-8");
         return viewResolver;
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[]{"com.codegym.cms.model"});
+        em.setPackagesToScan("com.codegym.cms.model");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -88,19 +93,10 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter implements Applic
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3308/customer_Repository");
-        dataSource.setUsername( "root" );
-        dataSource.setPassword( "123456" );
+        dataSource.setUrl("jdbc:mysql://localhost:3308/customer");
+        dataSource.setUsername("root");
+        dataSource.setPassword("123456");
         return dataSource;
-    }
-
-    @Bean
-    public ProvinceService provinceService(){
-         return new ProvinceServiceImpl();
-    }
-    @Bean
-    public CustomerService customerService(){
-        return new CustomerServiceImpl();
     }
 
     @Bean
@@ -110,14 +106,31 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter implements Applic
         return transactionManager;
     }
 
-    Properties additionalProperties() {
+    Properties additionalProperties(){
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }
-//    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
-//    }
+
+    @Bean
+    public ProvinceService provinceService(){
+        return new ProvinceServiceImpl();
+    }
+
+    @Bean
+    public CustomerService customerService(){
+        return new CustomerServiceImpl();
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
+    }
+
+
+    @Bean
+    public Logger logger(){
+        return new Logger();
+    }
 }
