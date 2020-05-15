@@ -2,11 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{customer.title}"></title>
 </head>
+<br>
 <body>
-<a href="/customer/create">Create new customer</a>
-<div class="notify">
+
+language:<a href="?lang=en">English</a> |
+         <a href="?lang=vi">VietNamese</a>
+<h1 th:text="#{customer.heading}"></h1>
+<br/>
+
+<form>
+<a href="/customer/create"><span th:text="#{customer.create}"></span></a>
+    <div class="notify">
     <div th:if="${message}">
         <!--/*@thymesVar id="message" type="com.codegym.AppConfiguration"*/-->
         <span th:text="${message}"></span>
@@ -14,24 +22,25 @@
     <h1>Customers</h1>
     <table border="1">
         <tr>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Province name</th>
-            <th>Edit</th>
-            <th>Delete</th>
-            <th>View</th>
+            <th th:text="#{customer.hang_lable1}">First name</th>
+            <th th:text="#{customer.hang_lable2}">Last name</th>
+            <th th:text="#{customer.hang_lable3}">Province name</th>
+            <th th:text="#{customer.hang_lable4}">Edit</th>
+            <th th:text="#{customer.hang_lable5}">Delete</th>
+            <th th:text="#{customer.hang_lable6}"></th>
         </tr>
         <th:block th:each="customer : ${customers}">
             <tr>
                 <td th:text="${customer.firstName}"></td>
                 <td th:text="${customer.lastName}"></td>
                 <td th:text="${customer.province.name}"></td>
-                <td><a th:href="@{/customer/edit/{id}(id=${customer.getId()})}">Edit</a></td>
-                <td><a th:href="@{/customer/delete/{id}(id=${customer.getId()})}">Delete</a></td>
-                <td><a th:href="@{/customer/view/{id}(id=${customer.getId()})}">View</a></td>
+                <td><a th:href="@{/customer/edit/{id}(id=${customer.getId()})}"><span th:text="#{customer.hang_lable4}"></span></a></td>
+                <td><a th:href="@{/customer/delete/{id}(id=${customer.getId()})}"><span th:text="#{customer.hang_lable5}"></span></a></td>
+                <td><a th:href="@{/customer/view/{id}(id=${customer.getId()})}"><span th:text="#{customer.hang_lable6}"></span></a></td>
             </tr>
         </th:block>
     </table>
 </div>
+</form>
 </body>
 </html>
