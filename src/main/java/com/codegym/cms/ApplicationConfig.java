@@ -2,10 +2,13 @@ package com.codegym.cms;
 
 import com.codegym.cms.concern.Logger;
 import com.codegym.cms.formatter.ProvinceFormatter;
+import com.codegym.cms.model.AppUser;
 import com.codegym.cms.service.Customer.CustomerService;
 import com.codegym.cms.service.Customer.CustomerServiceImpl;
 import com.codegym.cms.service.Province.ProvinceService;
 import com.codegym.cms.service.Province.ProvinceServiceImpl;
+import com.codegym.cms.service.appuser.AppUserService;
+import com.codegym.cms.service.appuser.AppUserServiceImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -160,4 +163,8 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter implements Applic
         localeResolver.setDefaultLocale(new Locale("en"));
         return localeResolver;
     }
-}
+    @Bean
+    public AppUserService appUserService() {
+        return  new AppUserServiceImpl();
+    }
+    }
