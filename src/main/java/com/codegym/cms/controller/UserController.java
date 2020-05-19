@@ -38,18 +38,20 @@ public class UserController {
         System.out.println(context);
         return "/customer/admin";
     }
-    @GetMapping("/articles")
-    public String getArticlesPage () {
-        return "articler";
+//    @GetMapping("/articles")
+//    public String getArticlesPage () {
+//        return "articler";
+//
+//    }
+//    @GetMapping("/accessDenied")
+//    public String getAccessDeniedPage() {
+//        return "accessDenied";
+//    }
+//    @GetMapping("/admin/monitor")
+//    public String getAdminMonitorPage() {
+//        return "admin";
+//    }
 
-    }
-    @GetMapping("/accessDenied")
-    public String getAccessDeniedPage() {
-        return "accessDenied";
-    }
-    @GetMapping("/admin/monitor")
-    public String getAdminMonitorPage() {
-        return "admin";
-    }
+
 }
 
