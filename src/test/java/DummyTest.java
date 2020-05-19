@@ -7,7 +7,7 @@ class DummyTest {
 
         int  actual=1+1;
 
-        int excepted= 2;
+        int excepted= 3;
 
         assertEquals( actual,excepted);
 
